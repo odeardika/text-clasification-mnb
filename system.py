@@ -4,6 +4,8 @@ from nltk.corpus import stopwords
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import re
 import pandas as pd
+from mtranslate import translate
+import math
 
 
 def lowerCaseAndNoNumber(list):
@@ -80,7 +82,79 @@ def split_sentence(sentence):
     print(sentence)
     return result
 
-from mtranslate import translate
+def no_abbreviation(list):
+    dictonary = {
+        'maf' : 'maaf',
+        'tdk' : 'tidak',
+        'lgi' : 'lagi',
+        'bgta' : 'begitu',
+        'ngisknpa' : 'kenapa',
+        'ga' : 'tidak',
+        'jdi' : 'jadi',
+        'rapicuman' : 'rapi cuman',
+        'emang' : 'memang',
+        'emg' : 'memang',
+        'gerahand' : 'gerah dan',
+        'bhong' : 'bohong',
+        'dri' : 'dari',
+        'jga' : 'juga',
+        'krna' : 'karena',
+        'trlalu' : 'terlalu',
+        'bgt' : 'banget',
+        'asliny':'asli',
+        'yg' : 'yang',
+        'dlu' : 'dulu',
+        'seler' : 'seller',
+        'ky':'kayak',
+        'dgn' : 'dengan',
+        'baklgus' : 'bagus',
+        'yh':'yah',
+        'realpict' : 'foto asli',
+        'yearbok' : 'yearbook',
+        'tingi' : 'tinggi',
+        'lgsg':'langsung',
+        'cm' : 'cuma',
+        'tak' : '',
+        'gak' :'tidak',
+        'thankyou': 'terimakasih',
+        'sih':'',
+        'it' : '',
+        'nya' : '',
+        'ny' : '',
+        'karna' : 'karena',
+        'bahanya': 'bahan',
+        'camera' : 'kamera',
+        'thanks' : 'terimakasih',
+        'seller' : 'penjual',
+        'ya' : '',
+        'bukak': 'buka',
+        'real' : 'asli',
+        'next' : 'lanjut',
+        'order' : 'pesanan',
+        'deh':'',
+        'worth':'bernilai',
+        'and' : 'dan',
+        'bet': '',
+        'dah': '',
+        'tebel':'tebal',
+        'kak':'kakak',
+        'datengnya': '',
+        'kasi':'berikan',
+        'kainya':'kain',
+        'jahitanya':'jahit',
+        'dateng' : 'datang',
+        'nyampe' : 'sampai',
+        'yah': ''
+        
+         
+    }
+    result = []
+    for sentence in list:
+        pattern =  re.compile(r'\b('+'|'.join(dictonary.keys())+r')\b')        
+        temp = pattern.sub(lambda x: dictonary[x.group()], sentence)
+        result.append(temp)
+    return result
+
 def translate_to_indo(data):
     result = []
     for sentence in data:
@@ -145,7 +219,6 @@ def wordSort(lists):
     
     return words
 
-import math
 def TFIDF(list, words):
     #banyak dokumen
     #term frecuency
