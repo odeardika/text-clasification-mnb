@@ -255,3 +255,34 @@ def TFIDF(list, words):
         tf_idf = tf_idf.rename(columns={i:words[i]})
     
     return tf_idf
+
+def oneHotEncoder(data):
+    # One-hot encoding
+    one_hot = {}
+    for doc in data:
+        for word in doc:
+            one_hot[word] = [1 if word in doc else 0 for doc in data]
+    # Convert to dataframe
+    df = pd.DataFrame(one_hot, index=["doc_" + str(i+1) for i in range(len(data))])
+
+    return df
+
+def basicBow(data):
+    # inisialisasi vocabulary
+    vocabulary = set()
+    for d in data:
+        for word in d:
+            vocabulary.add(word)
+            
+    # inisialisasi empty array untuk menampung bag-of-words
+    bag_of_words = []
+    for d in data:
+        row = []
+        for word in vocabulary:
+            count = d.count(word)
+            row.append(count)
+        bag_of_words.append(row)
+    df = pd.DataFrame(bag_of_words, columns=list(vocabulary), 
+                      index=["doc_" + str(i+1) for i in range(len(data))])
+    df = df.transpose()
+    return df
