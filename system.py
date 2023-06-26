@@ -256,7 +256,7 @@ def TFIDF(list, words):
     
     return tf_idf
 
-def oneHotEncoder(data):
+def oneHotEncoder(data, word):
     # One-hot encoding
     one_hot = {}
     for doc in data:
@@ -267,7 +267,7 @@ def oneHotEncoder(data):
 
     return df
 
-def basicBow(data):
+def basicBow(data, word):
     # inisialisasi vocabulary
     vocabulary = set()
     for d in data:
