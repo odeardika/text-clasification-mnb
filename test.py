@@ -16,5 +16,10 @@ import pandas as pd
         
 # print(temp)
 
-test = pd.read_csv('Result_Preprocessing/tfidf_result.csv')
-print(test.iloc[:,1:])
+# test = pd.read_csv('Result_Preprocessing/tfidf_result.csv')
+# print(test.iloc[:,1:])
+
+ 
+import numpy as np
+import matplotlib.pyplot as plt
+

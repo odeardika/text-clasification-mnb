@@ -1,11 +1,15 @@
 import streamlit as st
 import pandas as pd
 import system
-from naive_bayes_model import model_prediction_accuracy 
+import preprocessing_backend as preback
+
+if st.button('Press this to update data'):
+    preback.do_preprocessing()
+
 
 review_datas = pd.read_excel('reviews.xlsx')
-reviews = review_datas['Reviews']
-label_reviews = review_datas['Label']
+reviews = review_datas['Reviews'][:10]
+label_reviews = review_datas['Label'][:10]
 
 st.write('Data Reviews')
 st.table(pd.concat([reviews,label_reviews], axis=1)[:30])
@@ -44,28 +48,25 @@ reviews = system.stopWord(reviews)
 st.table(reviews[:10])
 
 st.write('Stemming')
-reviews = system.stemming(reviews)
+reviews = pd.read_csv('Result_Preprocessing/Stem_result.csv').iloc[:,1:]
 st.table(reviews[:10])
 
 st.write('Sorted Word')
-list_word_sorted = system.wordSort(reviews)
-st.table(list_word_sorted)
+list_word_sorted = pd.read_csv('Result_Preprocessing/Word Sorted_result.csv').iloc[:,1:]
+reviews = [i for i in reviews]
+st.table(list_word_sorted[:30])
 
 st.title('One Hot Encoder vectorization')
-one_hot = system.oneHotEncoder(reviews, list_word_sorted)
-st.table(one_hot)
+one_hot = pd.read_csv('Result_Preprocessing/One Hot Encoder_result.csv').iloc[:,1:]
+st.table(one_hot[:10])
 
 st.title('Bag Of Word vectorization')
-Bag_of_word = pd.read_csv('TFIDF_result')
-st.dataframe(Bag_of_word[:10])
+Bag_of_word = pd.read_csv('Result_Preprocessing/BOW_result.csv').iloc[:,1:]
+st.table(Bag_of_word[:10])
 
 st.title('TF-IDF vectorization')
-TFIDF = system.TFIDF(reviews,list_word_sorted)
-st.table(TFIDF)
-    
-TFIDF = Bag_of_word.drop(Bag_of_word.columns[-1], axis=1)
+TFIDF = pd.read_csv('Result_Preprocessing/tfidf_result.csv').iloc[:,1:]
 st.table(TFIDF[:10])
-prediction_tfidf = model_prediction_accuracy(X=TFIDF[:10],y=label_reviews[:10])
-st.table(prediction_tfidf)
-
+    
+st.pyplot(system.show_prediction())
 
