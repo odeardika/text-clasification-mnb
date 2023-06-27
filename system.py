@@ -144,7 +144,8 @@ def no_abbreviation(list):
         'jahitanya':'jahit',
         'dateng' : 'datang',
         'nyampe' : 'sampai',
-        'yah': ''
+        'yah': '',
+        'se': '',
         
          
     }
@@ -154,6 +155,21 @@ def no_abbreviation(list):
         temp = pattern.sub(lambda x: dictonary[x.group()], sentence)
         result.append(temp)
     return result
+
+def remove_empty_token(data_list):
+    result_data = []
+    for document in data_list:
+        temp_dokumen = []
+        # print(document)
+        for token_index in range(len(document)):
+            # print(document[token_index])
+            if document[token_index] != '':
+                temp_dokumen.append(document[token_index])
+        result_data.append(temp_dokumen)
+    
+    return result_data
+                
+                
 
 def translate_to_indo(data):
     result = []
@@ -240,6 +256,8 @@ def TFIDF(list, words):
     for i in range(len(df)):
         if df[i] > 0:
             idf[i] = math.log(n/df[i])
+    
+        
     
     tf_idf = []
     for subList in range(len(tf)):
