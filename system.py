@@ -6,6 +6,8 @@ import re
 import pandas as pd
 from mtranslate import translate
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def lowerCaseAndNoNumber(list):
@@ -271,7 +273,7 @@ def TFIDF(list, words):
             tempTFIDF.append(a*b)
         tf_idf.append(tempTFIDF)
     
-    tf_idf = pd.DataFrame(tf_idf, index=["Dokumen" + str(i+1) for i in range(len(tf_idf))])
+    tf_idf = pd.DataFrame(tf_idf, index=["document_" + str(i+1) for i in range(len(tf_idf))])
     for i in range(len(words)):
         tf_idf = tf_idf.rename(columns={i:words[i]})
     
@@ -283,7 +285,7 @@ def oneHotEncoder(data, word_sorted):
     for word in word_sorted:
         one_hot[word] = [1 if word in doc else 0 for doc in data]
     # Convert to dataframe
-    df = pd.DataFrame(one_hot, index=["doc_" + str(i+1) for i in range(len(data))])
+    df = pd.DataFrame(one_hot, index=["document_" + str(i+1) for i in range(len(data))])
 
     return df.transpose()
 
@@ -298,10 +300,68 @@ def basicBow(data, word_sorted):
             row.append(count)
         bag_of_words.append(row)
     df = pd.DataFrame(bag_of_words, columns=list(word_sorted), 
-                      index=["doc_" + str(i+1) for i in range(len(data))])
+                      index=["document_" + str(i+1) for i in range(len(data))])
     df = df.transpose()
     return df
 
 def list_to_csv(data, path_and_name):
     pd.DataFrame(data, index=[f'document_{i+1}' for i in range(len(data))]).to_csv(path_and_name)
     
+
+def show_prediction():
+    prediction = pd.read_csv('Result_Preprocessing/Prediction_result.csv').iloc[:,1:].transpose()
+    print(prediction.iloc[1])
+    prediction_bar = []
+    for i in range(4):
+        temp = []
+        for j in prediction.iloc[i]:
+            temp.append(round(j * 100,2))
+        prediction_bar.append(temp)
+    # set width of bar
+    barWidth = 0.20
+    fig = plt.subplots(figsize =(10, 8))
+
+    # set height of bar
+    # f1_score = [0.92 * 100, 0.923077, 0.828025]
+    # recall = [28, 10,5]
+    # precision = [29, 10, 5]
+    # accuracy = [29, 10, 5]
+
+    # Set position of bar on X axis
+    br1 = np.arange(len(prediction_bar[0]))
+    br2 = [x + barWidth for x in br1]
+    br3 = [x + barWidth for x in br2]
+    br4 = [x + barWidth for x in br3]
+
+    # Annotate bar heights
+    for i, v in enumerate(prediction_bar[0]):
+        plt.text(br1[i] - 0.08, v + 1, str(v), color='black')
+
+    for i, v in enumerate(prediction_bar[1]):
+        plt.text(br2[i] - 0.08, v + 1, str(v), color='black')
+
+    for i, v in enumerate(prediction_bar[2]):
+        plt.text(br3[i] - 0.08, v + 1, str(v), color='black')
+
+    for i, v in enumerate(prediction_bar[3]):
+        plt.text(br4[i] - 0.04, v + 1, str(v), color='black')
+
+    # Make the plot
+    plt.bar(br1, prediction_bar[0], color ='r', width = barWidth,
+            edgecolor ='grey', label ='F1-Score', data='10')
+    plt.bar(br2, prediction_bar[1], color ='g', width = barWidth,
+            edgecolor ='grey', label ='Recall')
+    plt.bar(br3, prediction_bar[2], color ='b', width = barWidth,
+            edgecolor ='grey', label ='Precision')
+    plt.bar(br4, prediction_bar[3], color ='c', width = barWidth,
+            edgecolor ='grey', label ='Accuracy')
+    # Adding Xticks
+    plt.xlabel('Text Representation', fontweight ='bold', fontsize = 15)
+    plt.ylabel('Prediction Result', fontweight ='bold', fontsize = 15)
+    plt.xticks([r + barWidth for r in range(3)],
+            ['One Hot Encoder', 'BoW', 'TFIDF'])
+
+    plt.legend(loc='upper right', bbox_to_anchor=(1.20, 1))
+    plt.show()
+    
+    return plt
