@@ -16,5 +16,5 @@ import pandas as pd
         
 # print(temp)
 
-test = 'string kosong check'.split(' ')
-print(test)
+test = pd.read_csv('Result_Preprocessing/tfidf_result.csv')
+print(test.iloc[:,1:])

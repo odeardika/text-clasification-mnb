@@ -240,8 +240,10 @@ def TFIDF(list, words):
     #term frecuency
     tf = []
     for doc in list:
+        # list berisi 1
         tempDoc = [1 for i in range(len(words))]
         for word in doc:
+            # menambahkan 1 untuk setiap kata yang ditemukan
             tempDoc[words.index(word)] += 1
         tf.append(tempDoc)
     n = len(list) 
@@ -265,6 +267,7 @@ def TFIDF(list, words):
         for i in words:
             a = tf[subList][words.index(i)]
             b = idf[words.index(i)]
+            # tf * idf
             tempTFIDF.append(a*b)
         tf_idf.append(tempTFIDF)
     
@@ -274,33 +277,31 @@ def TFIDF(list, words):
     
     return tf_idf
 
-def oneHotEncoder(data, word):
+def oneHotEncoder(data, word_sorted):
     # One-hot encoding
     one_hot = {}
-    for doc in data:
-        for word in doc:
-            one_hot[word] = [1 if word in doc else 0 for doc in data]
+    for word in word_sorted:
+        one_hot[word] = [1 if word in doc else 0 for doc in data]
     # Convert to dataframe
     df = pd.DataFrame(one_hot, index=["doc_" + str(i+1) for i in range(len(data))])
 
-    return df
+    return df.transpose()
 
-def basicBow(data, word):
-    # inisialisasi vocabulary
-    vocabulary = set()
-    for d in data:
-        for word in d:
-            vocabulary.add(word)
+def basicBow(data, word_sorted):
             
     # inisialisasi empty array untuk menampung bag-of-words
     bag_of_words = []
     for d in data:
         row = []
-        for word in vocabulary:
+        for word in word_sorted:
             count = d.count(word)
             row.append(count)
         bag_of_words.append(row)
-    df = pd.DataFrame(bag_of_words, columns=list(vocabulary), 
+    df = pd.DataFrame(bag_of_words, columns=list(word_sorted), 
                       index=["doc_" + str(i+1) for i in range(len(data))])
     df = df.transpose()
     return df
+
+def list_to_csv(data, path_and_name):
+    pd.DataFrame(data, index=[f'document_{i+1}' for i in range(len(data))]).to_csv(path_and_name)
+    
