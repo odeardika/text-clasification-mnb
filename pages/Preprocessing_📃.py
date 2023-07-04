@@ -3,8 +3,8 @@ import pandas as pd
 import system
 import preprocessing_backend as preback
 
-if st.button('Press this to update data'):
-    preback.do_preprocessing()
+# if st.button('Press this to update data'):
+#     preback.do_preprocessing()
 
 
 review_datas = pd.read_excel('reviews.xlsx')

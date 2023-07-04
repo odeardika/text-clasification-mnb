@@ -5,7 +5,7 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 import joblib
 import pandas as pd
 
-def model_prediction_accuracy(X, y, value_k, model_name):
+def model_prediction_accuracy(X, y, model_name):
     # split the data to train data and test data
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
                                                     test_size=0.2 , # Train Data 80:20 Test Data
@@ -18,6 +18,6 @@ def model_prediction_accuracy(X, y, value_k, model_name):
     precision = precision_score(y_test, y_pred)
     accuracy = accuracy_score(y_test, y_pred)
 
-    joblib.dump(model, f'model_naive_bayes/{model_name}.pkl')
+    joblib.dump(model, f'model_naive_bayes/model_{model_name}.pkl')
     
     return [f1,recall,precision,accuracy]
