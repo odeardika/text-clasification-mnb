@@ -2,8 +2,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score, recall_score, f1_score
+import joblib
+import pandas as pd
 
-def model_prediction_accuracy(X, y):
+def model_prediction_accuracy(X, y, value_k, model_name):
     # split the data to train data and test data
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
                                                     test_size=0.2 , # Train Data 80:20 Test Data
@@ -15,6 +17,7 @@ def model_prediction_accuracy(X, y):
     recall = recall_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
     accuracy = accuracy_score(y_test, y_pred)
+
+    joblib.dump(model, f'model_naive_bayes/{model_name}.pkl')
     
     return [f1,recall,precision,accuracy]
-    
